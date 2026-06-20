@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white text-navy-900 antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-semibold tracking-tight text-navy-900;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+  .btn-primary {
+    @apply btn bg-star-400 text-navy-950 shadow-lift hover:bg-star-300 focus-visible:ring-star-400;
+  }
+  .btn-secondary {
+    @apply btn border border-navy-200 bg-white text-navy-800 hover:border-navy-300 hover:bg-navy-50 focus-visible:ring-navy-400;
+  }
+  .btn-ghost {
+    @apply btn text-navy-700 hover:bg-navy-50;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-navy-800;
+  }
+  .field-input {
+    @apply w-full rounded-xl border border-navy-200 bg-white px-4 py-3 text-navy-900 placeholder:text-navy-300 transition focus:border-navy-400 focus:outline-none focus:ring-2 focus:ring-navy-200;
+  }
+  .field-error {
+    @apply mt-1 text-sm text-red-600;
+  }
+
+  .card {
+    @apply rounded-2xl border border-navy-100 bg-white shadow-card;
+  }
+}
