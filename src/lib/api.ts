@@ -132,7 +132,7 @@ export const api = {
 
   // --- Plaid-backed bank verification ---
   async createPlaidLinkToken(userId: string): Promise<{ link_token: string }> {
-    return request("/plaid/link-token", {
+    return request("/api/plaid/link-token", {
       method: "POST",
       body: JSON.stringify({ userId }),
     });
@@ -145,7 +145,7 @@ export const api = {
     public_token: string;
     institution_name?: string;
   }): Promise<{ message: string }> {
-    return request("/bank-connections", {
+    return request("/api/bank-connections", {
       method: "POST",
       body: JSON.stringify(input),
     });
@@ -153,7 +153,7 @@ export const api = {
 
   async getBankStatus(applicationUuid: string): Promise<unknown> {
     return request(
-      `/bank-connections/${encodeURIComponent(applicationUuid)}/status`,
+      `/api/bank-connections/${encodeURIComponent(applicationUuid)}/status`,
     );
   },
 
@@ -184,7 +184,7 @@ export const api = {
     adminId: string,
   ): Promise<AdminNote> {
     const data = await request<{ message: string; note: AdminNote }>(
-      `/admin-notes/${encodeURIComponent(applicationId)}`,
+      `/api/admin-notes/${encodeURIComponent(applicationId)}`,
       {
         method: "POST",
         body: JSON.stringify({

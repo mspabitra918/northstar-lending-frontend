@@ -33,7 +33,7 @@ function LoginForm() {
     setError(null);
     setLoading(true);
     try {
-      const { data } = await api.post<LoginResponse>("/auth/login", {
+      const { data } = await api.post<LoginResponse>("/api/auth/login", {
         email: email.trim(),
         password,
       });

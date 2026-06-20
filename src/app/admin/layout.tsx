@@ -56,7 +56,7 @@ export default function AdminLayout({
       }
 
       try {
-        const response = await fetch(`${API_BASE}/auth/me`, {
+        const response = await fetch(`${API_BASE}/api/auth/me`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

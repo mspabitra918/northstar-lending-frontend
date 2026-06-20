@@ -95,8 +95,8 @@ export default function DocumentsContent() {
       // Token uploads derive the application server-side; legacy uploads pass
       // the application id in the path.
       const url = token
-        ? `${API_BASE}/documents/token/${encodeURIComponent(token)}/upload`
-        : `${API_BASE}/documents/${encodeURIComponent(
+        ? `${API_BASE}/api/documents/token/${encodeURIComponent(token)}/upload`
+        : `${API_BASE}/api/documents/${encodeURIComponent(
             legacyApplicationId!,
           )}/upload`;
 
