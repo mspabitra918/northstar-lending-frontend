@@ -42,6 +42,7 @@ export default function ContactPage() {
   const [number, setNumber] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const handelSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +57,7 @@ export default function ContactPage() {
       };
 
       await api.createContacts(payload);
+      setSubmitted(true);
 
       setFullName("");
       setEmail("");
@@ -142,94 +144,118 @@ export default function ContactPage() {
         <section className="mx-auto max-w-7xl px-6 pb-20">
           <div className="grid gap-10 lg:grid-cols-2">
             {/* Contact Form */}
-            <div className="rounded-2xl bg-white p-8 shadow">
-              <h2 className="mb-6 text-2xl font-bold">Send Us a Message</h2>
 
-              <form className="space-y-5">
-                <div>
-                  <label className="mb-2 block text-sm font-medium">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="w-full rounded-lg border p-3"
-                    placeholder="John Doe"
-                  />
-                </div>
+            {submitted ? (
+              <div className="rounded-xl border border-green-200 bg-green-50 p-8 text-center">
+                <div className="mb-4 text-5xl">✅</div>
 
-                <div>
-                  <label className="mb-2 block text-sm font-medium">
-                    Email Address
-                  </label>
-                  <input
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    type="email"
-                    className="w-full rounded-lg border p-3"
-                    placeholder="john@example.com"
-                  />
-                </div>
+                <h3 className="mb-2 text-2xl font-bold text-green-700">
+                  Message Sent Successfully
+                </h3>
 
-                <div>
-                  <label className="mb-2 block text-sm font-medium">
-                    Phone Number
-                  </label>
-                  <input
-                    value={number}
-                    onChange={(e) => {
-                      const digits = e.target.value
-                        .replace(/\D/g, "")
-                        .slice(0, 10);
-
-                      let formatted = digits;
-
-                      if (digits.length > 6) {
-                        formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-                      } else if (digits.length > 3) {
-                        formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-                      } else if (digits.length > 0) {
-                        formatted = `(${digits}`;
-                      }
-
-                      setNumber(formatted);
-                    }}
-                    type="tel"
-                    className="w-full rounded-lg border p-3"
-                    placeholder="(555) 123-4567"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium">
-                    Message
-                  </label>
-                  <textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    rows={5}
-                    className="w-full rounded-lg border p-3"
-                    placeholder="How can we help you?"
-                  />
-                </div>
+                <p className="mb-6 text-slate-600">
+                  Thank you for contacting Northstar Lending. Our team will
+                  review your message and respond as soon as possible.
+                </p>
 
                 <button
                   type="button"
-                  onClick={handelSubmit}
-                  disabled={loading}
-                  className="w-full rounded-lg bg-star-400 px-6 py-3 font-semibold text-black hover:bg-star-500"
+                  onClick={() => setSubmitted(false)}
+                  className="rounded-lg bg-navy-950 px-6 py-3 text-white"
                 >
-                  {loading ? (
-                    <div className="flex items-center justify-center">
-                      <Loader2 className={loading ? "animate-spin" : ""} />
-                    </div>
-                  ) : (
-                    " Send Message"
-                  )}
+                  Send Another Message
                 </button>
-              </form>
-            </div>
+              </div>
+            ) : (
+              <div className="rounded-2xl bg-white p-8 shadow">
+                <h2 className="mb-6 text-2xl font-bold">Send Us a Message</h2>
+
+                <form className="space-y-5">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="w-full rounded-lg border p-3"
+                      placeholder="John Doe"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium">
+                      Email Address
+                    </label>
+                    <input
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      type="email"
+                      className="w-full rounded-lg border p-3"
+                      placeholder="john@example.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium">
+                      Phone Number
+                    </label>
+                    <input
+                      value={number}
+                      onChange={(e) => {
+                        const digits = e.target.value
+                          .replace(/\D/g, "")
+                          .slice(0, 10);
+
+                        let formatted = digits;
+
+                        if (digits.length > 6) {
+                          formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+                        } else if (digits.length > 3) {
+                          formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+                        } else if (digits.length > 0) {
+                          formatted = `(${digits}`;
+                        }
+
+                        setNumber(formatted);
+                      }}
+                      type="tel"
+                      className="w-full rounded-lg border p-3"
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium">
+                      Message
+                    </label>
+                    <textarea
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      rows={5}
+                      className="w-full rounded-lg border p-3"
+                      placeholder="How can we help you?"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handelSubmit}
+                    disabled={loading}
+                    className="w-full rounded-lg bg-star-400 px-6 py-3 font-semibold text-black hover:bg-star-500"
+                  >
+                    {loading ? (
+                      <div className="flex items-center justify-center">
+                        <Loader2 className={loading ? "animate-spin" : ""} />
+                      </div>
+                    ) : (
+                      " Send Message"
+                    )}
+                  </button>
+                </form>
+              </div>
+            )}
 
             {/* Google Map */}
             <div className="overflow-hidden rounded-2xl shadow">
