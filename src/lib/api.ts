@@ -4,6 +4,8 @@ import type {
   ApplicationStatus,
   ApplyPayload,
   Loan,
+  ContactsPayload,
+  Contact,
 } from "./types";
 import { getToken } from "./auth";
 
@@ -53,6 +55,13 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  async createContacts(payload: ContactsPayload) {
+    const data = await request(`/api/contact/create`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    return data;
+  },
   // Submit a new loan application. Returns the created loan (with its public
   // application_id and internal UUID).
   async apply(payload: ApplyPayload): Promise<Loan> {

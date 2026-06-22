@@ -78,6 +78,7 @@ export const NAV_LINKS = [
   { href: "/how-it-works", label: "How It Works" },
   { href: "/reviews", label: "Reviews & Trust" },
   { href: "/status", label: "Loan Status" },
+  { href: "/contact", label: "Contact" },
 ] as const;
 
 export function formatUSD(amount: number): string {

@@ -3,6 +3,7 @@ import { api, ApiError } from "@/lib/api";
 import { formatUSD, LOAN } from "@/lib/constants";
 import { Agreement, Loan } from "@/lib/types";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { SignedPanel } from "./SignedPanel";
 
 export function SignAgreementBlock({ loan }: { loan: Loan }) {
@@ -12,6 +13,11 @@ export function SignAgreementBlock({ loan }: { loan: Loan }) {
 
   const [fullName, setFullName] = useState("");
   const [agreed, setAgreed] = useState(false);
+  // E-Sign Consent Disclosure must be accepted before the borrower can view or
+  // sign the PDF contract. Pre-seed as accepted if the loan is already signed.
+  const [esignConsent, setEsignConsent] = useState(
+    Boolean(loan.agreement_signed_at),
+  );
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   // Locally track a signature completed this session so the UI flips without a
@@ -51,6 +57,12 @@ export function SignAgreementBlock({ loan }: { loan: Loan }) {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!esignConsent) {
+      setFormError(
+        "Please accept the Electronic Communications & E-Sign Consent Disclosure to continue.",
+      );
+      return;
+    }
     if (!fullName.trim()) {
       setFormError("Type your full legal name to sign.");
       return;
@@ -139,8 +151,44 @@ export function SignAgreementBlock({ loan }: { loan: Loan }) {
           use of electronic records and signatures.
         </p>
 
-        {/* Full PDF link when available */}
-        {loadingAgreement ? (
+        {/* ── E-Sign Consent gate ───────────────────────────────── */}
+        {/* The E-Sign Consent Disclosure must be accepted before the borrower
+            can view or sign the PDF contract. */}
+        {!signed && (
+          <label className="mt-5 flex items-start gap-2 rounded-xl border border-navy-200 bg-navy-50/60 px-4 py-3 text-sm text-navy-700">
+            <input
+              type="checkbox"
+              className="mt-0.5"
+              checked={esignConsent}
+              onChange={(e) => {
+                setEsignConsent(e.target.checked);
+                if (e.target.checked) setFormError(null);
+              }}
+              disabled={submitting}
+            />
+            <span>
+              I have read and agree to the{" "}
+              <Link
+                href="/e-sign-consent"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-star-700 hover:underline"
+              >
+                Electronic Communications &amp; E-Sign Consent Disclosure
+              </Link>
+              , and I consent to receiving and signing my loan documents
+              electronically.
+            </span>
+          </label>
+        )}
+
+        {/* Full PDF link — only available once E-Sign consent is accepted */}
+        {!signed && !esignConsent ? (
+          <p className="mt-3 text-sm text-navy-400">
+            Accept the E-Sign Consent Disclosure above to view and sign your
+            agreement.
+          </p>
+        ) : loadingAgreement ? (
           <p className="mt-3 text-sm text-navy-400">
             Preparing your agreement document…
           </p>
@@ -160,7 +208,7 @@ export function SignAgreementBlock({ loan }: { loan: Loan }) {
         {/* ── Digital signature block ───────────────────────────── */}
         {signed ? (
           <SignedPanel name={signed.name || borrowerName} at={signed.at} />
-        ) : (
+        ) : !esignConsent ? null : (
           <form onSubmit={submit} className="mt-6">
             <p className="text-sm font-semibold text-navy-900">
               Your signature

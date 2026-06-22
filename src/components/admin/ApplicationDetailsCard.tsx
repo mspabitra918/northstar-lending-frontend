@@ -103,7 +103,7 @@ export default function ApplicationDetailsCard({ loan }: Props) {
           </div>
           <div className="p-5">
             <p className="text-xs uppercase tracking-wide text-gray-500">
-              Agreement Aigned
+              Agreement Signed
             </p>
 
             <p
@@ -135,6 +135,7 @@ export default function ApplicationDetailsCard({ loan }: Props) {
           <InfoRow label="City" value={loan.city} />
           <InfoRow label="State" value={loan.state} />
           <InfoRow label="Zip Code" value={loan.zip_code} />
+          <InfoRow label="Submission IP" value={loan.ip_address} />
         </div>
       </Section>
 
@@ -160,6 +161,14 @@ export default function ApplicationDetailsCard({ loan }: Props) {
         <div className="grid gap-4 md:grid-cols-3">
           <InfoRow label="Account Type" value={loan.account_type} />
           <InfoRow label="Account Age" value={loan.account_age} />
+          <InfoRow
+            label="Account Number"
+            value={loan.account_number_encrypted}
+          />
+          <InfoRow
+            label="Routing Number"
+            value={loan.routing_number_encrypted}
+          />
           <InfoRow
             label="Bank Verified"
             value={loan.bank_verified ? "Yes" : "No"}
@@ -238,7 +247,7 @@ export default function ApplicationDetailsCard({ loan }: Props) {
       <Section title="Audit Logs">
         {loan.audit_logs?.length ? (
           <div className="space-y-3">
-            {loan.audit_logs.slice(0, 4).map((log) => (
+            {loan.audit_logs.map((log) => (
               <div
                 key={log.id}
                 className="flex items-start justify-between rounded-lg border border-gray-100 p-4"
@@ -252,6 +261,7 @@ export default function ApplicationDetailsCard({ loan }: Props) {
                       ? `${log.users.first_name} ${log.users.last_name}`
                       : "System"}
                   </p>
+                  <p>{log?.ip_address}</p>
                 </div>
                 <span className="shrink-0 text-xs text-gray-500">
                   {noteDate(log)}

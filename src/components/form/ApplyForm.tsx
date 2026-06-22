@@ -419,6 +419,7 @@ function StepPersonal({ values, errors, set }: StepProps) {
           value={values.loan_amount}
           error={errors.loan_amount}
           onChange={set}
+          placeholder="$5000"
           hint={`${formatUSD(LOAN.minAmount)}–${formatUSD(LOAN.maxAmount)}`}
         />
         <SelectField
@@ -443,6 +444,7 @@ function StepPersonal({ values, errors, set }: StepProps) {
           error={errors.first_name}
           onChange={set}
           autoComplete="given-name"
+          placeholder="John Doe"
         />
         <TextField
           label="Legal last name"
@@ -450,6 +452,7 @@ function StepPersonal({ values, errors, set }: StepProps) {
           value={values.last_name}
           error={errors.last_name}
           onChange={set}
+          placeholder="Doe"
           autoComplete="family-name"
         />
       </div>
@@ -457,11 +460,21 @@ function StepPersonal({ values, errors, set }: StepProps) {
         <TextField
           label="Date of birth"
           name="dob"
-          type="date"
+          type="text"
           value={values.dob}
           error={errors.dob}
-          onChange={set}
+          onChange={(_, value) => {
+            const digits = value.replace(/\D/g, "").slice(0, 8);
+            let formatted = digits;
+            if (digits.length > 4) {
+              formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+            } else if (digits.length > 2) {
+              formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+            }
+            set("dob", formatted);
+          }}
           autoComplete="bday"
+          placeholder="MM/DD/YYYY"
         />
         <TextField
           label="SSN or ITIN"
@@ -491,6 +504,7 @@ function StepPersonal({ values, errors, set }: StepProps) {
           value={values.email}
           error={errors.email}
           onChange={set}
+          placeholder="johndoe@example.com"
           autoComplete="email"
         />
         <TextField
@@ -501,6 +515,7 @@ function StepPersonal({ values, errors, set }: StepProps) {
           error={errors.phone}
           inputMode="tel"
           autoComplete="tel"
+          placeholder="(798) 345-3454"
           onChange={(_, value) => {
             const digits = value.replace(/\D/g, "").slice(0, 10);
 
@@ -524,6 +539,7 @@ function StepPersonal({ values, errors, set }: StepProps) {
         value={values.address}
         error={errors.address}
         onChange={set}
+        placeholder="123 Maple Street, Apt 4BSpringfield"
         autoComplete="street-address"
       />
       <div className="grid gap-4 sm:grid-cols-3">
@@ -533,6 +549,7 @@ function StepPersonal({ values, errors, set }: StepProps) {
           value={values.city}
           error={errors.city}
           onChange={set}
+          placeholder="Chicago"
           autoComplete="address-level2"
         />
         <SelectField
@@ -551,6 +568,7 @@ function StepPersonal({ values, errors, set }: StepProps) {
           onChange={set}
           inputMode="numeric"
           autoComplete="postal-code"
+          placeholder="90210"
         />
       </div>
     </div>
@@ -709,7 +727,7 @@ function StepReferences({ values, errors, set }: StepProps) {
           error={errors.reference_name}
           onChange={set}
         />
-        {/* <TextField
+        <TextField
           label="Reference phone"
           name="reference_phone"
           type="tel"
@@ -731,8 +749,8 @@ function StepReferences({ values, errors, set }: StepProps) {
             set("reference_phone", formatted);
           }}
           inputMode="tel"
-        /> */}
-        <TextField
+        />
+        {/* <TextField
           label="Reference phone"
           name="reference_phone"
           type="tel"
@@ -741,7 +759,7 @@ function StepReferences({ values, errors, set }: StepProps) {
           inputMode="tel"
           autoComplete="tel"
           onChange={set}
-        />
+        /> */}
       </div>
       <SelectField
         label="Relationship to you"
@@ -789,21 +807,35 @@ function StepConsents({
           onChange={(_, c) => setConsentCredit(c)}
         >
           I authorize {BRAND.name} to obtain a credit assessment and verify the
-          information I’ve provided in order to evaluate my application. I
-          understand all credit tiers are considered.
+          information I have provided in order to evaluate my application, and I
+          acknowledge that my information will be handled in accordance with the{" "}
+          <Link
+            href="/privacy-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-star-600 hover:underline"
+          >
+            Privacy Policy
+          </Link>
+          . I understand all credit tiers are considered.
         </CheckboxField>
+
         <CheckboxField
           name="consent_tcpa"
           checked={consentTcpa}
           error={errors.consent_tcpa}
           onChange={(_, c) => setConsentTcpa(c)}
         >
-          <span className="font-medium">TCPA consent:</span> I expressly consent
-          to be contacted by {BRAND.name} at the phone number and email I
-          provided, including via automatic telephone dialing systems,
-          pre-recorded or artificial voice messages, SMS text messages, and
-          email. Consent is not a condition of any purchase, and I may opt out
-          at any time. Message and data rates may apply.
+          By checking this box and clicking <strong>"Submit"</strong>, I provide
+          my express written consent to receive transactional and promotional
+          communications from {BRAND.name} and its affiliates via automatic
+          telephone dialing systems, artificial or prerecorded voice messages,
+          SMS text messages, and emails at the phone number and email address
+          provided. I understand that my consent is not a condition of
+          purchasing any property, goods, or services, and that I may revoke
+          this consent at any time by replying <strong>"STOP"</strong> to text
+          messages or contacting support. Standard message and data rates may
+          apply.
         </CheckboxField>
       </div>
       <p className="text-xs leading-relaxed text-navy-400">

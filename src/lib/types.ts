@@ -31,6 +31,20 @@ export interface AdminNote {
   created_at?: string;
 }
 
+export interface ContactsPayload {
+  full_name: string;
+  email: string;
+  number: string;
+  message: string;
+}
+
+export interface Contact {
+  full_name: string;
+  email: string;
+  phone: string;
+  message: string;
+}
+
 // Audit-trail entry recorded for an application.
 export interface AuditLog {
   id: string;
@@ -82,6 +96,13 @@ export interface Loan {
   // Loan extras
   credit_tier?: string;
   consent_accepted?: boolean;
+  // Origin IP captured server-side at form submission.
+  ip_address?: string | null;
+  // Fraud signal (derived server-side): true when this application shares its
+  // origin IP with another application submitted within a 24h window.
+  ip_flagged?: boolean;
+  // Number of applications (incl. this one) sharing the IP within that window.
+  ip_flag_count?: number;
   // Reference
   reference_name?: string;
   reference_phone?: string;
@@ -93,6 +114,8 @@ export interface Loan {
   audit_logs?: AuditLog[];
   total: string;
   documents: [];
+  routing_number_encrypted: string;
+  account_number_encrypted: string;
 }
 
 // Returned by GET /api/loans/applications/:id/agreement. null when no agreement

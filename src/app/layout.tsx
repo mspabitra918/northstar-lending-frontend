@@ -13,6 +13,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${BRAND.domain}`;
 
 export const metadata: Metadata = {
+  icons: "/favicon.svg",
   metadataBase: new URL(SITE_URL),
   title: {
     default: `${BRAND.name} — Personal Loans up to $10,000, Funded in 24 Hours`,
