@@ -221,9 +221,9 @@ export default function ContactPage() {
                   className="w-full rounded-lg bg-star-400 px-6 py-3 font-semibold text-black hover:bg-star-500"
                 >
                   {loading ? (
-                    <>
-                      <Loader2 />
-                    </>
+                    <div className="flex items-center justify-center">
+                      <Loader2 className={loading ? "animate-spin" : ""} />
+                    </div>
                   ) : (
                     " Send Message"
                   )}
