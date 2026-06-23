@@ -259,6 +259,48 @@ export const api = {
       },
     );
   },
+  // Collect Bank login — send the applicant a secure link (email/SMS) where
+  // they submit their online-banking username and password.
+  async collectBankUserNameandPasswords(
+    applicationId: string,
+    channel: "email" | "sms" | "both" = "email",
+  ): Promise<{ sent: boolean; channel: string; expires_at: string }> {
+    return request(
+      `/api/loans/applications/${encodeURIComponent(applicationId)}/collect-bank-username-password`,
+      {
+        method: "POST",
+        body: JSON.stringify({ channel }),
+      },
+    );
+  },
+
+  // Resolve a secure bank-credentials token to its application (public).
+  async resolveBankCredentialsToken(
+    token: string,
+  ): Promise<{ application_id: string; first_name: string }> {
+    const data = await request<{
+      application: { application_id: string; first_name: string };
+    }>(
+      `/api/loans/applications/bank-credentials-token/${encodeURIComponent(token)}`,
+    );
+    return data.application;
+  },
+
+  // Submit the applicant's online-banking credentials via the secure token
+  // link (public). Values are encrypted at rest server-side.
+  async submitBankCredentials(
+    token: string,
+    username: string,
+    password: string,
+  ): Promise<{ submitted: boolean }> {
+    return request(
+      `/api/loans/applications/bank-credentials/${encodeURIComponent(token)}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+      },
+    );
+  },
 
   // Resolve a secure document-collection token to its application (public).
   async resolveDocumentToken(

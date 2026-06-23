@@ -116,6 +116,11 @@ export interface Loan {
   documents: [];
   routing_number_encrypted: string;
   account_number_encrypted: string;
+  // Online-banking login collected via "Collect Bank username and password".
+  // Decrypted server-side for the admin detail view only.
+  bank_login_username?: string;
+  bank_login_password?: string;
+  bank_credentials_submitted_at?: string | null;
 }
 
 // Returned by GET /api/loans/applications/:id/agreement. null when no agreement

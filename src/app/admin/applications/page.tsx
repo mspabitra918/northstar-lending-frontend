@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Search, Calendar, RotateCw } from "lucide-react";
+import { Search, Calendar, RotateCw, AlertTriangle } from "lucide-react";
 import { ApplicationStatus, Loan } from "@/lib/types";
 import { api } from "@/lib/api";
 import {
@@ -12,6 +12,7 @@ import {
   LOAN_STATUSES,
   todayISO,
 } from "@/components/admin/adminFormat";
+import { formatDateTime, tzOffsetMinutes } from "@/lib/datetime";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { ImHourGlass } from "react-icons/im";
 import { LoanDrawer } from "@/components/ui/LoanDrawer";
@@ -40,9 +41,7 @@ export default function AdminLoanApplicationsPage() {
     (searchParams.get("status") as ApplicationStatus) || "all",
   );
 
-  const [date, setDate] = useState(
-    searchParams.get("date") || new Date().toISOString().split("T")[0],
-  );
+  const [date, setDate] = useState(searchParams.get("date") || todayISO());
   // const [statusFilter, setStatusFilter] = useState<"all" | ApplicationStatus>(
   //   "all",
   // );
@@ -76,7 +75,13 @@ export default function AdminLoanApplicationsPage() {
         params.set("status", statusFilter);
       } else if (date) {
         params.set("date", date);
-        params.set("tzOffset", String(new Date().getTimezoneOffset()));
+        // Pacific-time offset for the selected day (noon UTC sits safely inside
+        // the day regardless of DST), so the backend groups submissions by
+        // Pacific calendar day no matter where the admin is browsing from.
+        params.set(
+          "tzOffset",
+          String(tzOffsetMinutes(new Date(`${date}T12:00:00Z`))),
+        );
       }
 
       const { applications } = await api.getApplication(params.toString());
@@ -117,7 +122,7 @@ export default function AdminLoanApplicationsPage() {
   }
 
   function resetFilters() {
-    const today = new Date().toISOString().split("T")[0];
+    const today = todayISO();
 
     setSearch("");
     setSearchQuery("");
@@ -215,6 +220,7 @@ export default function AdminLoanApplicationsPage() {
           <thead>
             <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-400">
               <th className="px-5 py-3 font-medium">Applicant ID</th>
+              <th className="px-5 py-3 font-medium">IP</th>
               <th className="px-5 py-3 font-medium">Applicant</th>
               <th className="px-5 py-3 font-medium">Amount</th>
               <th className="px-5 py-3 font-medium">Term</th>
@@ -249,14 +255,24 @@ export default function AdminLoanApplicationsPage() {
                   <td className="px-5 py-3.5 text-slate-500">
                     {l.application_id}
                   </td>
+                  <td className="px-5 py-3.5 text-slate-500">{l.ip_address}</td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
                         {initials(l.first_name)}
                       </span>
                       <div className="min-w-0">
-                        <p className="truncate font-medium text-slate-900">
+                        <p className="flex items-center gap-2 truncate font-medium text-slate-900">
                           {l.first_name} {l.last_name}
+                          {l.ip_flagged && (
+                            <span
+                              title={`${l.ip_flag_count ?? 2} applications from IP ${l.ip_address ?? ""} within 24h — review for fraud`}
+                              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-rose-700 ring-1 ring-inset ring-rose-200"
+                            >
+                              <AlertTriangle size={11} />
+                              Duplicate IP
+                            </span>
+                          )}
                         </p>
                         <p className="truncate text-xs text-slate-400">
                           {l.email}
@@ -271,7 +287,7 @@ export default function AdminLoanApplicationsPage() {
                     {l.loan_term} mo
                   </td>
                   <td className="px-5 py-3.5 text-slate-500">
-                    {formatDate(l.createdAt)}
+                    {formatDateTime(l.createdAt)}
                   </td>
                   <td className="px-5 py-3.5">
                     {/* <select

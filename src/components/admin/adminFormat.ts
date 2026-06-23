@@ -1,5 +1,9 @@
 import { ApplicationStatus } from "@/lib/types";
 
+// Date/time helpers live in one place so every surface renders application
+// timestamps in Pacific time. Re-exported here to preserve existing imports.
+export { formatDate, formatDateTime, todayISO } from "@/lib/datetime";
+
 /** Display metadata for each loan status — label + badge colour classes. */
 export const LOAN_STATUS_META: Record<
   ApplicationStatus,
@@ -55,39 +59,6 @@ export function formatMoney(value: string | number): string {
     currency: "USD",
     maximumFractionDigits: 0,
   }).format(n);
-}
-
-/** Short date, e.g. "May 27, 2026". */
-export function formatDate(value: string): string {
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
-/** Date + time, e.g. "May 27, 2026, 2:14 PM". */
-export function formatDateTime(value: string): string {
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
-
-/** Today's date as a YYYY-MM-DD string in the local timezone. */
-export function todayISO(): string {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  const d = String(now.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
 }
 
 /** Initials for an avatar bubble, e.g. "John Doe" → "JD". */

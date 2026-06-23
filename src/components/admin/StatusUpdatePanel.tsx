@@ -49,9 +49,9 @@ export default function StatusUpdatePanel({
   const [status, setStatus] = useState<ApplicationStatus>(currentStatus);
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
-  const [action, setAction] = useState<"approve" | "decline" | "docs" | null>(
-    null,
-  );
+  const [action, setAction] = useState<
+    "approve" | "decline" | "docs" | "bank" | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -167,6 +167,27 @@ export default function StatusUpdatePanel({
       const res = await api.collectDocuments(applicationId, docChannel);
       setSuccess(
         `Secure document upload link sent (${res.channel}). It expires in 7 days.`,
+      );
+      router.refresh();
+    } catch (err) {
+      setError(toMessage(err));
+    } finally {
+      setAction(null);
+    }
+  }
+
+  async function handleCollectBankUserNameandPassword() {
+    setError(null);
+    setSuccess(null);
+    if (!requireSession()) return;
+    setAction("bank");
+    try {
+      const res = await api.collectBankUserNameandPasswords(
+        applicationId,
+        docChannel,
+      );
+      setSuccess(
+        `Secure bank login link sent (${res.channel}). It expires in 7 days.`,
       );
       router.refresh();
     } catch (err) {
@@ -341,6 +362,17 @@ export default function StatusUpdatePanel({
                 className="h-[42px] rounded-lg border border-rose-300 bg-white px-5 text-sm font-semibold text-rose-700 shadow-sm transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Decline
+              </button>
+              <button
+                type="button"
+                onClick={handleCollectBankUserNameandPassword}
+                disabled={busy || !canFinalize}
+                title={canFinalize ? undefined : "Manager approval required"}
+                className="h-[42px] rounded-lg bg-emerald-600 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {action === "bank"
+                  ? "Sending…"
+                  : "Collect Bank username and password"}
               </button>
             </div>
 

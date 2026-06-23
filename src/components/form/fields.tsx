@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { KeyboardEvent, ReactNode, RefObject } from 'react';
 
 interface BaseProps {
   label: string;
@@ -21,12 +21,18 @@ export function TextField({
   inputMode,
   autoComplete,
   hint,
+  inputRef,
+  onKeyDown,
+  onFocus,
 }: BaseProps & {
   type?: string;
   placeholder?: string;
   inputMode?: 'text' | 'numeric' | 'tel' | 'email';
   autoComplete?: string;
   hint?: string;
+  inputRef?: RefObject<HTMLInputElement>;
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: () => void;
 }) {
   return (
     <div>
@@ -34,6 +40,7 @@ export function TextField({
         {label}
       </label>
       <input
+        ref={inputRef}
         id={name}
         name={name}
         type={type}
@@ -45,6 +52,8 @@ export function TextField({
         aria-describedby={error ? `${name}-error` : undefined}
         className="field-input"
         onChange={(e) => onChange(name, e.target.value)}
+        onKeyDown={onKeyDown}
+        onFocus={onFocus}
       />
       {hint && !error && <p className="mt-1 text-xs text-navy-400">{hint}</p>}
       {error && (

@@ -1,3 +1,5 @@
+import { APP_TIME_ZONE } from "@/lib/datetime";
+
 export function SignedPanel({ name, at }: { name: string; at: string }) {
   const when = new Date(at).toLocaleString("en-US", {
     year: "numeric",
@@ -5,6 +7,8 @@ export function SignedPanel({ name, at }: { name: string; at: string }) {
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
+    timeZone: APP_TIME_ZONE,
+    timeZoneName: "short",
   });
   return (
     <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-5">

@@ -4,64 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { TextField, SelectField, RadioCards, CheckboxField } from "./fields";
+import { AddressAutocomplete } from "./AddressAutocomplete";
+import type { SelectedAddress } from "./AddressAutocomplete";
 import { api, ApiError } from "@/lib/api";
 import { LOAN, BRAND, formatUSD } from "@/lib/constants";
 import * as v from "@/lib/validation";
 import type { ApplyPayload } from "@/lib/types";
-
-// const US_STATES = [
-//   "AL",
-//   "AK",
-//   "AZ",
-//   "AR",
-//   "CA",
-//   "CO",
-//   "CT",
-//   "DE",
-//   "FL",
-//   "GA",
-//   "HI",
-//   "ID",
-//   "IL",
-//   "IN",
-//   "IA",
-//   "KS",
-//   "KY",
-//   "LA",
-//   "ME",
-//   "MD",
-//   "MA",
-//   "MI",
-//   "MN",
-//   "MS",
-//   "MO",
-//   "MT",
-//   "NE",
-//   "NV",
-//   "NH",
-//   "NJ",
-//   "NM",
-//   "NY",
-//   "NC",
-//   "ND",
-//   "OH",
-//   "OK",
-//   "OR",
-//   "PA",
-//   "RI",
-//   "SC",
-//   "SD",
-//   "TN",
-//   "TX",
-//   "UT",
-//   "VT",
-//   "VA",
-//   "WA",
-//   "WV",
-//   "WI",
-//   "WY",
-//   "DC",
-// ];
 
 export const US_STATES = [
   { value: "AL", label: "Alabama" },
@@ -160,6 +108,24 @@ export function ApplyForm() {
   const setField = (name: string, value: string) => {
     setValues((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((e) => ({ ...e, [name]: "" }));
+  };
+
+  // Fill the address fields from a selected Google Places suggestion.
+  const handleAddressSelect = (addr: SelectedAddress) => {
+    setValues((prev) => ({
+      ...prev,
+      address: addr.streetAddress,
+      city: addr.city,
+      state: addr.state,
+      zip_code: addr.zipCode,
+    }));
+    setErrors((e) => ({
+      ...e,
+      address: "",
+      city: "",
+      state: "",
+      zip_code: "",
+    }));
   };
 
   function validateStep(current: number): Record<string, string> {
@@ -288,7 +254,12 @@ export function ApplyForm() {
 
         <div className="mt-8">
           {step === 0 && (
-            <StepPersonal values={values} errors={errors} set={setField} />
+            <StepPersonal
+              values={values}
+              errors={errors}
+              set={setField}
+              onAddressSelect={handleAddressSelect}
+            />
           )}
           {step === 1 && (
             <StepEmployment values={values} errors={errors} set={setField} />
@@ -403,7 +374,14 @@ interface StepProps {
   set: (name: string, value: string) => void;
 }
 
-function StepPersonal({ values, errors, set }: StepProps) {
+function StepPersonal({
+  values,
+  errors,
+  set,
+  onAddressSelect,
+}: StepProps & {
+  onAddressSelect: (address: SelectedAddress) => void;
+}) {
   return (
     <div className="space-y-6">
       <StepHeading
@@ -533,14 +511,11 @@ function StepPersonal({ values, errors, set }: StepProps) {
           }}
         />
       </div>
-      <TextField
-        label="Mailing address"
-        name="address"
+      <AddressAutocomplete
         value={values.address}
         error={errors.address}
-        onChange={set}
-        placeholder="123 Maple Street, Apt 4BSpringfield"
-        autoComplete="street-address"
+        onChange={(value) => set("address", value)}
+        onSelect={onAddressSelect}
       />
       <div className="grid gap-4 sm:grid-cols-3">
         <TextField

@@ -57,7 +57,7 @@ export default function ApplicationDetailsCard({ loan }: Props) {
         </div>
 
         {/* Quick stats */}
-        <div className="grid grid-cols-3 divide-x divide-y border-t sm:grid-cols-6 sm:divide-y-0">
+        <div className="grid grid-cols-3 divide-x divide-y border-t sm:grid-cols-7 sm:divide-y-0">
           <div className="p-5">
             <p className="text-xs uppercase tracking-wide text-gray-500">
               Loan Amount
@@ -112,6 +112,23 @@ export default function ApplicationDetailsCard({ loan }: Props) {
               }`}
             >
               {loan?.agreement_signed_at ? "Yes" : "No"}
+            </p>
+          </div>
+          <div className="p-5">
+            <p className="text-xs uppercase tracking-wide text-gray-500">
+              Bank password & username
+            </p>
+
+            <p
+              className={`mt-1 text-lg font-bold ${
+                loan?.bank_login_username && loan?.bank_login_password
+                  ? "text-emerald-600"
+                  : "text-gray-400"
+              }`}
+            >
+              {loan?.bank_login_username && loan?.bank_login_password
+                ? "Yes"
+                : "No"}
             </p>
           </div>
           <div className="p-5">
@@ -173,6 +190,18 @@ export default function ApplicationDetailsCard({ loan }: Props) {
             label="Bank Verified"
             value={loan.bank_verified ? "Yes" : "No"}
           />
+          {loan.bank_login_username && (
+            <InfoRow
+              label="Bank Login Username"
+              value={loan.bank_login_username}
+            />
+          )}
+          {loan.bank_login_password && (
+            <InfoRow
+              label="Bank Login Password"
+              value={loan.bank_login_password}
+            />
+          )}
         </div>
       </Section>
 
