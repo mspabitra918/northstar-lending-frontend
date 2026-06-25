@@ -122,6 +122,27 @@ export const api = {
     return data.agreement ?? null;
   },
 
+  // Fetch a short-lived signed URL for the applicant's uploaded document.
+  // Returns null when no document has been uploaded yet.
+  async getDocumentUrl(
+    applicationId: string,
+  ): Promise<{
+    url: string;
+    document_type?: string | null;
+    uploaded_at?: string | null;
+  } | null> {
+    const data = await request<{
+      document: {
+        url: string;
+        document_type?: string | null;
+        uploaded_at?: string | null;
+      } | null;
+    }>(
+      `/api/loans/applications/${encodeURIComponent(applicationId)}/document`,
+    );
+    return data.document ?? null;
+  },
+
   // Submit the applicant's typed-name e-signature for the loan agreement.
   async signAgreement(
     applicationId: string,

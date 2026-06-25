@@ -119,7 +119,7 @@ export function BankLinkModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-navy-950/60 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-navy-950/60  backdrop-blur-sm sm:items-center p-4 sm:p-4"
       onClick={() => dismissable && onClose()}
       role="dialog"
       aria-modal="true"

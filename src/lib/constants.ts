@@ -7,7 +7,7 @@ export const BRAND = {
   legalName: "Northstar Lending, LLC",
   domain: "northstarlend.com",
   tagline: "Modern personal loans, funded in 24 hours.",
-  phone: "+1-800-000-0000",
+  phone: "(747) 208-0334",
   email: "support@northstarlend.com",
   address: {
     street: "633 W 5th St",

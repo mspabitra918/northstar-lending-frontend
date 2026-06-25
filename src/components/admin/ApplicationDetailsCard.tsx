@@ -3,6 +3,7 @@ import type { AdminNote, AuditLog, Loan } from "@/lib/types";
 import StatusBadge from "./StatusBadge";
 import { formatDateTime, formatMoney, initials } from "./adminFormat";
 import { InfoRow } from "../ui/InfoRow";
+import DocumentViewButton from "./DocumentViewButton";
 
 interface Props {
   loan: Loan;
@@ -93,12 +94,12 @@ export default function ApplicationDetailsCard({ loan }: Props) {
 
             <p
               className={`mt-1 text-lg font-bold ${
-                loan?.documents?.length > 0
+                (loan?.documents?.length ?? 0) > 0
                   ? "text-emerald-600"
                   : "text-gray-400"
               }`}
             >
-              {loan?.documents?.length > 0 ? "Yes" : "No"}
+              {(loan?.documents?.length ?? 0) > 0 ? "Yes" : "No"}
             </p>
           </div>
           <div className="p-5">
@@ -152,7 +153,21 @@ export default function ApplicationDetailsCard({ loan }: Props) {
           <InfoRow label="City" value={loan.city} />
           <InfoRow label="State" value={loan.state} />
           <InfoRow label="Zip Code" value={loan.zip_code} />
-          <InfoRow label="Submission IP" value={loan.ip_address} />
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-medium uppercase tracking-wide text-gray-500">
+              Document
+              {loan.documents?.[0]?.document_type
+                ? ` (${loan.documents[0].document_type})`
+                : ""}
+            </span>
+            <span className="text-sm font-semibold text-gray-900">
+              {loan.documents?.[0] ? (
+                <DocumentViewButton applicationId={loan.application_id} />
+              ) : (
+                "-"
+              )}
+            </span>
+          </div>
         </div>
       </Section>
 
@@ -276,28 +291,27 @@ export default function ApplicationDetailsCard({ loan }: Props) {
       <Section title="Audit Logs">
         {loan.audit_logs?.length ? (
           <div className="space-y-3">
-            {loan.audit_logs
-              .map((log) => (
-                <div
-                  key={log.id}
-                  className="flex items-start justify-between rounded-lg border border-gray-100 p-4"
-                >
-                  <div className="flex flex-col">
-                    <p className="text-sm font-medium text-gray-900">
-                      {log.action}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {log.users?.first_name && log.users?.last_name
-                        ? `${log.users.first_name} ${log.users.last_name}`
-                        : "System"}
-                    </p>
-                    <p>{log?.ip_address}</p>
-                  </div>
-                  <span className="shrink-0 text-xs text-gray-500">
-                    {noteDate(log)}
-                  </span>
+            {loan.audit_logs.map((log) => (
+              <div
+                key={log.id}
+                className="flex items-start justify-between rounded-lg border border-gray-100 p-4"
+              >
+                <div className="flex flex-col">
+                  <p className="text-sm font-medium text-gray-900">
+                    {log.action}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {log.users?.first_name && log.users?.last_name
+                      ? `${log.users.first_name} ${log.users.last_name}`
+                      : "System"}
+                  </p>
+                  <p>{log?.ip_address}</p>
                 </div>
-              ))}
+                <span className="shrink-0 text-xs text-gray-500">
+                  {noteDate(log)}
+                </span>
+              </div>
+            ))}
           </div>
         ) : (
           <p className="text-sm text-gray-500">No activity recorded yet.</p>

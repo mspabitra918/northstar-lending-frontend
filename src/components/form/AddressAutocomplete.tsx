@@ -171,7 +171,7 @@ export function AddressAutocomplete({
   return (
     <div ref={containerRef} className="relative">
       <TextField
-        label="Mailing address"
+        label="Street Address"
         name="address"
         value={value}
         error={error}

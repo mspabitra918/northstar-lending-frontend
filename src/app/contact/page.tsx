@@ -180,7 +180,7 @@ export default function ContactPage() {
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       className="w-full rounded-lg border p-3"
-                      placeholder="John Doe"
+                      placeholder="Your Full Name"
                     />
                   </div>
 
@@ -193,7 +193,7 @@ export default function ContactPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       type="email"
                       className="w-full rounded-lg border p-3"
-                      placeholder="john@example.com"
+                      placeholder="Your Email Address"
                     />
                   </div>
 
@@ -222,7 +222,7 @@ export default function ContactPage() {
                       }}
                       type="tel"
                       className="w-full rounded-lg border p-3"
-                      placeholder="(555) 123-4567"
+                      placeholder="Your Phone Number"
                     />
                   </div>
 
@@ -235,7 +235,7 @@ export default function ContactPage() {
                       onChange={(e) => setMessage(e.target.value)}
                       rows={5}
                       className="w-full rounded-lg border p-3"
-                      placeholder="How can we help you?"
+                      placeholder="Your Message"
                     />
                   </div>
 

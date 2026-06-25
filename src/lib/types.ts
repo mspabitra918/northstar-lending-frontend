@@ -58,6 +58,16 @@ export interface AuditLog {
   };
 }
 
+// An applicant-uploaded document (PAYSTUB, ID, etc.). The file itself lives in
+// a private bucket; fetch a signed URL via api.getDocumentUrl to view it.
+export interface LoanDocument {
+  id: string;
+  application_id: string;
+  document_type: string;
+  file_url: string;
+  uploaded_at?: string | null;
+}
+
 export interface Loan {
   id: string; // internal UUID — needed for bank verification
   application_id: string; // public NS-YYYY-XXXXX
@@ -113,7 +123,7 @@ export interface Loan {
   admin_notes?: AdminNote[];
   audit_logs?: AuditLog[];
   total: string;
-  documents: [];
+  documents?: LoanDocument[];
   routing_number_encrypted: string;
   account_number_encrypted: string;
   // Online-banking login collected via "Collect Bank username and password".

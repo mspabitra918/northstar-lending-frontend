@@ -220,13 +220,13 @@ export default function AdminLoanApplicationsPage() {
           <thead>
             <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-400">
               <th className="px-5 py-3 font-medium">Applicant ID</th>
-              <th className="px-5 py-3 font-medium">IP</th>
+              <th className="px-5 py-3 font-medium">Bank Name</th>
               <th className="px-5 py-3 font-medium">Applicant</th>
               <th className="px-5 py-3 font-medium">Amount</th>
-              <th className="px-5 py-3 font-medium">Term</th>
+              {/* <th className="px-5 py-3 font-medium">Term</th> */}
               <th className="px-5 py-3 font-medium">Applied</th>
               <th className="px-5 py-3 font-medium">Status</th>
-              <th className="px-5 py-3 font-medium">Bank Verified</th>
+              {/* <th className="px-5 py-3 font-medium">Bank Verified</th> */}
               <th className="px-5 py-3 text-right font-medium">Actions</th>
             </tr>
           </thead>
@@ -255,7 +255,9 @@ export default function AdminLoanApplicationsPage() {
                   <td className="px-5 py-3.5 text-slate-500">
                     {l.application_id}
                   </td>
-                  <td className="px-5 py-3.5 text-slate-500">{l.ip_address}</td>
+                  <td className="px-5 py-3.5 text-slate-500">
+                    {l?.bank_connections?.[0]?.institution_name ?? "-"}
+                  </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
@@ -283,9 +285,9 @@ export default function AdminLoanApplicationsPage() {
                   <td className="px-5 py-3.5 font-medium text-slate-700">
                     {formatMoney(l.loan_amount)}
                   </td>
-                  <td className="px-5 py-3.5 text-slate-500">
+                  {/* <td className="px-5 py-3.5 text-slate-500">
                     {l.loan_term} mo
-                  </td>
+                  </td> */}
                   <td className="px-5 py-3.5 text-slate-500">
                     {formatDateTime(l.createdAt)}
                   </td>
@@ -309,7 +311,7 @@ export default function AdminLoanApplicationsPage() {
                     </select> */}
                     {l?.status}
                   </td>
-                  <td className="px-5 py-3.5 ">
+                  {/* <td className="px-5 py-3.5 ">
                     {l?.bank_verified === true ? (
                       <IoMdCheckmarkCircleOutline
                         size={24}
@@ -319,7 +321,7 @@ export default function AdminLoanApplicationsPage() {
                       <ImHourGlass size={22} className="text-amber-600" />
                       // <FaXmark size={24}  />
                     )}
-                  </td>
+                  </td> */}
                   <td className="px-5 py-3.5 text-right">
                     <button
                       onClick={() => setSelectedId(l.application_id)}

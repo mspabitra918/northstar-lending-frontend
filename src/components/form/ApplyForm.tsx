@@ -8,6 +8,11 @@ import { AddressAutocomplete } from "./AddressAutocomplete";
 import type { SelectedAddress } from "./AddressAutocomplete";
 import { api, ApiError } from "@/lib/api";
 import { LOAN, BRAND, formatUSD } from "@/lib/constants";
+import {
+  computeLoanSummary,
+  formatUSDCents,
+  formatPaymentDate,
+} from "@/lib/loanMath";
 import * as v from "@/lib/validation";
 import type { ApplyPayload } from "@/lib/types";
 
@@ -272,6 +277,7 @@ export function ApplyForm() {
           )}
           {step === 4 && (
             <StepConsents
+              values={values}
               consentCredit={consentCredit}
               consentTcpa={consentTcpa}
               setConsentCredit={(c) => {
@@ -397,7 +403,7 @@ function StepPersonal({
           value={values.loan_amount}
           error={errors.loan_amount}
           onChange={set}
-          placeholder="$5000"
+          placeholder="Your Amount"
           hint={`${formatUSD(LOAN.minAmount)}–${formatUSD(LOAN.maxAmount)}`}
         />
         <SelectField
@@ -406,7 +412,7 @@ function StepPersonal({
           value={values.loan_term}
           error={errors.loan_term}
           onChange={set}
-          placeholder="Select term"
+          placeholder="Your Select Term"
           options={LOAN.terms.map((t) => ({
             value: String(t),
             label: `${t} months`,
@@ -422,7 +428,7 @@ function StepPersonal({
           error={errors.first_name}
           onChange={set}
           autoComplete="given-name"
-          placeholder="John Doe"
+          placeholder="Your First name"
         />
         <TextField
           label="Legal last name"
@@ -430,7 +436,7 @@ function StepPersonal({
           value={values.last_name}
           error={errors.last_name}
           onChange={set}
-          placeholder="Doe"
+          placeholder="Your Last name"
           autoComplete="family-name"
         />
       </div>
@@ -452,7 +458,7 @@ function StepPersonal({
             set("dob", formatted);
           }}
           autoComplete="bday"
-          placeholder="MM/DD/YYYY"
+          placeholder="Your Date of Birth"
         />
         <TextField
           label="SSN or ITIN"
@@ -470,7 +476,7 @@ function StepPersonal({
             set("ssn", formatted);
           }}
           inputMode="numeric"
-          placeholder="•••-••-••••"
+          placeholder="Your SSN or ITIN"
           hint="Encrypted at the field level."
         />
       </div>
@@ -482,7 +488,7 @@ function StepPersonal({
           value={values.email}
           error={errors.email}
           onChange={set}
-          placeholder="johndoe@example.com"
+          placeholder="Your Email Address"
           autoComplete="email"
         />
         <TextField
@@ -493,7 +499,7 @@ function StepPersonal({
           error={errors.phone}
           inputMode="tel"
           autoComplete="tel"
-          placeholder="(798) 345-3454"
+          placeholder="Your Phone Number"
           onChange={(_, value) => {
             const digits = value.replace(/\D/g, "").slice(0, 10);
 
@@ -524,12 +530,13 @@ function StepPersonal({
           value={values.city}
           error={errors.city}
           onChange={set}
-          placeholder="Chicago"
+          placeholder="Your City"
           autoComplete="address-level2"
         />
         <SelectField
           label="State"
           name="state"
+          placeholder="Your State"
           value={values.state}
           error={errors.state}
           onChange={set}
@@ -543,7 +550,7 @@ function StepPersonal({
           onChange={set}
           inputMode="numeric"
           autoComplete="postal-code"
-          placeholder="90210"
+          placeholder="Your ZIP Code"
         />
       </div>
     </div>
@@ -561,6 +568,7 @@ function StepEmployment({ values, errors, set }: StepProps) {
       <SelectField
         label="Employment status"
         name="employment_status"
+        placeholder="Your Employment Status"
         value={values.employment_status}
         error={errors.employment_status}
         onChange={set}
@@ -579,7 +587,7 @@ function StepEmployment({ values, errors, set }: StepProps) {
         error={errors.monthly_income}
         onChange={set}
         inputMode="numeric"
-        placeholder="e.g. 4500"
+        placeholder="Your Monthly Gross Income (USD) "
       />
       {employed && (
         <div className="grid gap-4 sm:grid-cols-2">
@@ -589,9 +597,11 @@ function StepEmployment({ values, errors, set }: StepProps) {
             value={values.employer_name}
             error={errors.employer_name}
             onChange={set}
+            placeholder="Your Employer Name"
           />
           <TextField
             label="Employer phone"
+            placeholder="Your Employer Phone Number"
             name="employer_phone"
             type="tel"
             value={values.employer_phone}
@@ -640,6 +650,7 @@ function StepBanking({ values, errors, set }: StepProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField
           label="Routing number"
+          placeholder="Your Routing Number"
           name="routing_number"
           value={values.routing_number}
           error={errors.routing_number}
@@ -649,6 +660,7 @@ function StepBanking({ values, errors, set }: StepProps) {
         />
         <TextField
           label="Account number"
+          placeholder="Your Account Number"
           name="account_number"
           value={values.account_number}
           error={errors.account_number}
@@ -672,6 +684,7 @@ function StepBanking({ values, errors, set }: StepProps) {
       <SelectField
         label="Self-reported credit tier"
         name="credit_tier"
+        placeholder="Your Self-reported Credit Tier"
         value={values.credit_tier}
         error={errors.credit_tier}
         onChange={set}
@@ -697,6 +710,7 @@ function StepReferences({ values, errors, set }: StepProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField
           label="Reference full name"
+          placeholder="Enter reference's full name"
           name="reference_name"
           value={values.reference_name}
           error={errors.reference_name}
@@ -704,6 +718,7 @@ function StepReferences({ values, errors, set }: StepProps) {
         />
         <TextField
           label="Reference phone"
+          placeholder="Enter reference's phone number"
           name="reference_phone"
           type="tel"
           value={values.reference_phone || ""}
@@ -738,6 +753,7 @@ function StepReferences({ values, errors, set }: StepProps) {
       </div>
       <SelectField
         label="Relationship to you"
+        placeholder="Select your relationship"
         name="reference_relationship"
         value={values.reference_relationship}
         error={errors.reference_relationship}
@@ -756,12 +772,14 @@ function StepReferences({ values, errors, set }: StepProps) {
 }
 
 function StepConsents({
+  values,
   consentCredit,
   consentTcpa,
   setConsentCredit,
   setConsentTcpa,
   errors,
 }: {
+  values: Values;
   consentCredit: boolean;
   consentTcpa: boolean;
   setConsentCredit: (c: boolean) => void;
@@ -773,6 +791,10 @@ function StepConsents({
       <StepHeading
         title="Review & consent"
         sub="Step 5 of 5 — Required authorizations"
+      />
+      <LoanSummaryCard
+        amount={Number(values.loan_amount) || 0}
+        term={Number(values.loan_term) || 0}
       />
       <div className="space-y-5 rounded-2xl border border-navy-100 bg-navy-50 p-5">
         <CheckboxField
@@ -823,6 +845,76 @@ function StepConsents({
 }
 
 /* ---------- bits ---------- */
+
+// Repayment preview shown on the final review step so the borrower sees exactly
+// what they'll owe — monthly payment, total interest, and the first/last due
+// dates — before submitting. Hidden until a valid amount + term are chosen.
+function LoanSummaryCard({ amount, term }: { amount: number; term: number }) {
+  if (!amount || !term) {
+    return (
+      <div className="rounded-2xl border border-navy-100 bg-white p-5 text-sm text-navy-500">
+        Choose a loan amount and term in Step 1 to see your repayment summary.
+      </div>
+    );
+  }
+
+  const summary = computeLoanSummary(amount, term, LOAN.apr);
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-navy-100 bg-white">
+      <div className="border-b border-navy-100 bg-navy-50 px-5 py-4">
+        <p className="text-sm font-semibold uppercase tracking-wider text-star-600">
+          Your repayment summary
+        </p>
+        <p className="mt-1 text-3xl font-bold text-navy-900">
+          {formatUSDCents(summary.monthlyPayment)}
+          <span className="ml-1 text-base font-medium text-navy-500">
+            / month
+          </span>
+        </p>
+        <p className="mt-1 text-sm text-navy-500">
+          {term} monthly payments · {LOAN.apr}% fixed APR
+        </p>
+      </div>
+      <dl className="grid grid-cols-2 gap-x-4 gap-y-4 p-5 text-sm">
+        <SummaryItem label="Loan amount" value={formatUSD(summary.principal)} />
+        <SummaryItem label="Loan term" value={`${term} months`} />
+        <SummaryItem
+          label="Total interest"
+          value={formatUSDCents(summary.totalInterest)}
+        />
+        <SummaryItem
+          label="Total to repay"
+          value={formatUSDCents(summary.totalPayment)}
+        />
+        <SummaryItem
+          label="First payment"
+          value={formatPaymentDate(summary.firstPaymentDate)}
+        />
+        <SummaryItem
+          label="Final payment"
+          value={formatPaymentDate(summary.lastPaymentDate)}
+        />
+      </dl>
+      <p className="border-t border-navy-100 px-5 py-3 text-xs leading-relaxed text-navy-400">
+        Payments are due on the 10th of each month. Your first installment is the
+        10th of next month. This is an estimate based on a {LOAN.apr}% fixed APR;
+        your final terms are confirmed in your loan agreement.
+      </p>
+    </div>
+  );
+}
+
+function SummaryItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <dt className="text-xs font-medium uppercase tracking-wide text-navy-400">
+        {label}
+      </dt>
+      <dd className="text-base font-semibold text-navy-900">{value}</dd>
+    </div>
+  );
+}
 
 function Stepper({ step }: { step: number }) {
   return (

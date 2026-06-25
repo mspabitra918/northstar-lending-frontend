@@ -77,6 +77,11 @@ export function Footer() {
             </li>
             <li>Serving all 50 states</li>
             <li>
+              <a className="hover:text-white" href={`tel:${BRAND.phone}`}>
+                {BRAND.phone}
+              </a>
+            </li>
+            <li>
               <a className="hover:text-white" href={`mailto:${BRAND.email}`}>
                 {BRAND.email}
               </a>
