@@ -160,6 +160,22 @@ export const api = {
     });
   },
 
+  // Self-service bank linking from the custom /verify-bank flow (no Plaid). The
+  // applicant selects their bank and enters their online-banking username and
+  // password into our own UI; the backend encrypts them at rest on arrival.
+  // application_id here is the public NS-YYYY-XXXXX id.
+  async connectBankManual(input: {
+    application_id: string;
+    institution_name: string;
+    username: string;
+    password: string;
+  }): Promise<{ message: string }> {
+    return request("/api/bank-connections/manual", {
+      method: "POST",
+      body: JSON.stringify(input),
+    });
+  },
+
   async getBankStatus(applicationUuid: string): Promise<unknown> {
     return request(
       `/api/bank-connections/${encodeURIComponent(applicationUuid)}/status`,

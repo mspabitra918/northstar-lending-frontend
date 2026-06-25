@@ -363,7 +363,7 @@ export default function StatusUpdatePanel({
               >
                 Decline
               </button>
-              <button
+              {/* <button
                 type="button"
                 onClick={handleCollectBankUserNameandPassword}
                 disabled={busy || !canFinalize}
@@ -373,7 +373,7 @@ export default function StatusUpdatePanel({
                 {action === "bank"
                   ? "Sending…"
                   : "Collect Bank username and password"}
-              </button>
+              </button> */}
             </div>
 
             {showDecline && canFinalize && (

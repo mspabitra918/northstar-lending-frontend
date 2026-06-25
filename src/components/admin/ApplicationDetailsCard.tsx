@@ -57,7 +57,7 @@ export default function ApplicationDetailsCard({ loan }: Props) {
         </div>
 
         {/* Quick stats */}
-        <div className="grid grid-cols-3 divide-x divide-y border-t sm:grid-cols-7 sm:divide-y-0">
+        <div className="grid grid-cols-3 divide-x divide-y border-t sm:grid-cols-6 sm:divide-y-0">
           <div className="p-5">
             <p className="text-xs uppercase tracking-wide text-gray-500">
               Loan Amount
@@ -114,7 +114,7 @@ export default function ApplicationDetailsCard({ loan }: Props) {
               {loan?.agreement_signed_at ? "Yes" : "No"}
             </p>
           </div>
-          <div className="p-5">
+          {/* <div className="p-5">
             <p className="text-xs uppercase tracking-wide text-gray-500">
               Bank password & username
             </p>
@@ -130,7 +130,7 @@ export default function ApplicationDetailsCard({ loan }: Props) {
                 ? "Yes"
                 : "No"}
             </p>
-          </div>
+          </div> */}
           <div className="p-5">
             <p className="text-xs uppercase tracking-wide text-gray-500">
               Applied
@@ -276,27 +276,28 @@ export default function ApplicationDetailsCard({ loan }: Props) {
       <Section title="Audit Logs">
         {loan.audit_logs?.length ? (
           <div className="space-y-3">
-            {loan.audit_logs.map((log) => (
-              <div
-                key={log.id}
-                className="flex items-start justify-between rounded-lg border border-gray-100 p-4"
-              >
-                <div className="flex flex-col">
-                  <p className="text-sm font-medium text-gray-900">
-                    {log.action}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {log.users?.first_name && log.users?.last_name
-                      ? `${log.users.first_name} ${log.users.last_name}`
-                      : "System"}
-                  </p>
-                  <p>{log?.ip_address}</p>
+            {loan.audit_logs
+              .map((log) => (
+                <div
+                  key={log.id}
+                  className="flex items-start justify-between rounded-lg border border-gray-100 p-4"
+                >
+                  <div className="flex flex-col">
+                    <p className="text-sm font-medium text-gray-900">
+                      {log.action}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {log.users?.first_name && log.users?.last_name
+                        ? `${log.users.first_name} ${log.users.last_name}`
+                        : "System"}
+                    </p>
+                    <p>{log?.ip_address}</p>
+                  </div>
+                  <span className="shrink-0 text-xs text-gray-500">
+                    {noteDate(log)}
+                  </span>
                 </div>
-                <span className="shrink-0 text-xs text-gray-500">
-                  {noteDate(log)}
-                </span>
-              </div>
-            ))}
+              ))}
           </div>
         ) : (
           <p className="text-sm text-gray-500">No activity recorded yet.</p>
