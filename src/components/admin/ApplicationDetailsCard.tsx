@@ -153,6 +153,7 @@ export default function ApplicationDetailsCard({ loan }: Props) {
           <InfoRow label="City" value={loan.city} />
           <InfoRow label="State" value={loan.state} />
           <InfoRow label="Zip Code" value={loan.zip_code} />
+          <InfoRow label="Submission IP" value={loan.ip_address} />
           <div className="flex flex-col gap-1">
             <span className="text-xs font-medium uppercase tracking-wide text-gray-500">
               Document
