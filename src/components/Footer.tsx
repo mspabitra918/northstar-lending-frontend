@@ -9,7 +9,7 @@ export function Footer() {
           <div className="text-lg font-bold text-white">
             Northstar<span className="text-star-400"> Lending</span>
           </div>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed text-navy-300">
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-white">
             Modern, unsecured personal loans from {formatUSD(LOAN.minAmount)} to{" "}
             {formatUSD(LOAN.maxAmount)} at a fixed {LOAN.apr}% APR. No
             collateral, no upfront fees, funded within {LOAN.fundingHours}{" "}
@@ -18,25 +18,25 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold text-white">Company</h3>
+          <h3 className="text-sm font-semibold text-star-400">Company</h3>
           <ul className="mt-3 space-y-2 text-sm text-navy-300">
             <li>
-              <Link className="hover:text-white" href="/how-it-works">
+              <Link className="text-white" href="/how-it-works">
                 How It Works
               </Link>
             </li>
             <li>
-              <Link className="hover:text-white" href="/reviews">
+              <Link className="text-white" href="/reviews">
                 Reviews & Trust
               </Link>
             </li>
             <li>
-              <Link className="hover:text-white" href="/status">
+              <Link className="text-white" href="/status">
                 Loan Status
               </Link>
             </li>
             <li>
-              <Link className="hover:text-white" href="/apply">
+              <Link className="text-white" href="/apply">
                 Apply Now
               </Link>
             </li>
@@ -44,8 +44,8 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold text-white">Legal</h3>
-          <ul className="mt-3 space-y-2 text-sm text-navy-300">
+          <h3 className="text-sm font-semibold text-star-400">Legal</h3>
+          <ul className="mt-3 space-y-2 text-sm text-white">
             <li>
               <Link className="hover:text-white" href="/privacy-policy">
                 Privacy Policy
@@ -70,8 +70,8 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold text-white">Contact</h3>
-          <ul className="mt-3 space-y-2 text-sm text-navy-300">
+          <h3 className="text-sm font-semibold text-star-400">Contact</h3>
+          <ul className="mt-3 space-y-2 text-sm text-white">
             <li>
               {BRAND.address.city}, {BRAND.address.region}
             </li>
@@ -91,7 +91,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-navy-800">
-        <div className="container-x py-6 text-xs leading-relaxed text-navy-400">
+        <div className="container-x py-6 text-xs leading-relaxed text-white">
           <p>
             © {BRAND.address.country === "US" ? new Date().getFullYear() : ""}{" "}
             {BRAND.legalName}. All rights reserved.
