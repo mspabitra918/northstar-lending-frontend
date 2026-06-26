@@ -12,8 +12,9 @@ export default function ConditionalLayout({
 }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
+  const isAuth = pathname.startsWith("/auth");
 
-  if (isAdmin) {
+  if (isAdmin || isAuth) {
     return <main>{children}</main>;
   }
 

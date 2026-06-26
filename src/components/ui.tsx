@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 // Small shared presentational helpers used across marketing pages.
 
@@ -14,7 +14,7 @@ export function SectionHeading({
   center?: boolean;
 }) {
   return (
-    <div className={center ? 'mx-auto max-w-2xl text-center' : 'max-w-2xl'}>
+    <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
       {eyebrow && (
         <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-star-600">
           {eyebrow}
@@ -54,7 +54,7 @@ export function Stars({ rating }: { rating: number }) {
           width="18"
           height="18"
           viewBox="0 0 24 24"
-          className={i < rating ? 'fill-star-400' : 'fill-navy-200'}
+          className={i < rating ? "fill-star-400" : "fill-navy-200"}
           aria-hidden="true"
         >
           <path d="M12 2l2.9 6.3L22 9.3l-5 4.6 1.3 6.8L12 17.5 5.7 20.7 7 13.9l-5-4.6 7.1-1z" />
@@ -79,7 +79,10 @@ export function CtaBanner() {
           <Link href="/apply" className="btn-primary w-full sm:w-auto">
             Apply Now
           </Link>
-          <Link href="/how-it-works" className="btn-secondary w-full border-navy-700 bg-transparent text-white hover:bg-navy-800 sm:w-auto">
+          <Link
+            href="/how-it-works"
+            className="btn-secondary w-full border-navy-700 bg-transparent text-white hover:bg-navy-800 sm:w-auto"
+          >
             See How It Works
           </Link>
         </div>

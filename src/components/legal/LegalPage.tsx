@@ -9,7 +9,7 @@ export default function LegalPage({ title, children }: LegalPageProps) {
   return (
     <div className="bg-white">
       <section className="bg-navy-950">
-        <div className="container-x py-20">
+        <div className="container-x py-10 md:py-20">
           <h1 className="text-4xl font-bold text-white">{title}</h1>
         </div>
       </section>

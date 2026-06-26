@@ -110,9 +110,35 @@ export function ApplyForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  // const setField = (name: string, value: string) => {
+  //   setValues((prev) => ({ ...prev, [name]: value }));
+  //   if (errors[name]) setErrors((e) => ({ ...e, [name]: "" }));
+  // };
+
+  const MAX_LOAN_AMOUNT = 10000;
+
   const setField = (name: string, value: string) => {
     setValues((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors((e) => ({ ...e, [name]: "" }));
+
+    if (name === "loan_amount") {
+      const amount = Number(value.replace(/,/g, ""));
+
+      if (amount > MAX_LOAN_AMOUNT) {
+        setErrors((prev) => ({
+          ...prev,
+          loan_amount: `Loan amount cannot exceed ${formatUSD(MAX_LOAN_AMOUNT)}.`,
+        }));
+        return;
+      }
+    }
+
+    // Clear the error when the value becomes valid
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
   };
 
   // Fill the address fields from a selected Google Places suggestion.
@@ -897,9 +923,9 @@ function LoanSummaryCard({ amount, term }: { amount: number; term: number }) {
         />
       </dl>
       <p className="border-t border-navy-100 px-5 py-3 text-xs leading-relaxed text-navy-400">
-        Payments are due on the 10th of each month. Your first installment is the
-        10th of next month. This is an estimate based on a {LOAN.apr}% fixed APR;
-        your final terms are confirmed in your loan agreement.
+        Payments are due on the 10th of each month. Your first installment is
+        the 10th of next month. This is an estimate based on a {LOAN.apr}% fixed
+        APR; your final terms are confirmed in your loan agreement.
       </p>
     </div>
   );

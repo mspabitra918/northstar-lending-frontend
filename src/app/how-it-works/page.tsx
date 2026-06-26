@@ -66,7 +66,7 @@ export default function HowItWorksPage() {
       />
 
       <section className="bg-navy-950">
-        <div className="container-x py-20 text-center">
+        <div className="container-x py-10 md:py-20 text-center">
           <h1 className="mx-auto max-w-3xl text-4xl font-bold text-white sm:text-5xl">
             From “I need it” to funded — in about a day.
           </h1>
@@ -78,7 +78,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* Application steps */}
-      <section className="container-x mt-20">
+      <section className="container-x mt-7 md:mt-20">
         <SectionHeading
           eyebrow="The application"
           title="Five simple steps to apply"

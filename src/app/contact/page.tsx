@@ -82,7 +82,7 @@ export default function ContactPage() {
       <div className="bg-gray-50">
         {/* Hero Section */}
         <section className="bg-navy-950">
-          <div className="container-x py-20 text-center">
+          <div className="container-x py-10 md:py-20 text-center">
             <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-bold text-white sm:text-5xl">
               Contact Northstar Lending
             </h1>
@@ -94,7 +94,7 @@ export default function ContactPage() {
         </section>
 
         {/* Contact Info */}
-        <section className="mx-auto max-w-7xl px-6 py-16">
+        <section className="mx-auto max-w-7xl px-6 py-7 md:py-16">
           <div className="grid gap-8 lg:grid-cols-3">
             <div className="rounded-2xl bg-white p-8 shadow">
               <h2 className="mb-4 text-xl font-semibold">Office Address</h2>

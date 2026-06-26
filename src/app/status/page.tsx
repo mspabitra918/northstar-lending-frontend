@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function StatusPage() {
   return (
-    <section className="container-x py-16">
+    <section className="container-x py-6 md:py-16">
       <div className="mb-10 text-center">
         <h1 className="text-3xl font-bold sm:text-4xl">Track your loan</h1>
         <p className="mx-auto mt-3 max-w-lg text-lg text-navy-600">
